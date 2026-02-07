@@ -11,13 +11,14 @@ import (
 
 // Config represents the feature configuration.
 type Config struct {
-	Feature string            `yaml:"feature"`
-	Version int               `yaml:"version"`
-	Backend string            `yaml:"backend"`
-	Claude  *ClaudeConfig     `yaml:"claude,omitempty"`
-	Copilot *CopilotConfig    `yaml:"copilot,omitempty"`
-	TDD     TDDConfig         `yaml:"tdd"`
-	Repos   map[string]Repo   `yaml:"repos,omitempty"`
+	Feature   string                `yaml:"feature"`
+	Version   int                   `yaml:"version"`
+	Backend   string                `yaml:"backend"`
+	Claude    *ClaudeConfig         `yaml:"claude,omitempty"`
+	Copilot   *CopilotConfig        `yaml:"copilot,omitempty"`
+	TDD       TDDConfig             `yaml:"tdd"`
+	Repos     map[string]Repo       `yaml:"repos,omitempty"`
+	TaskTypes map[string]TaskType   `yaml:"taskTypes,omitempty"`
 }
 
 // ClaudeConfig holds Claude-specific settings.
@@ -55,6 +56,12 @@ type Repo struct {
 	Path   string `yaml:"path,omitempty"`
 }
 
+// TaskType represents configuration for a task type.
+type TaskType struct {
+	Model    string `yaml:"model"`
+	Thinking string `yaml:"thinking,omitempty"`
+}
+
 // New creates a new Config with default values.
 func New(feature string) *Config {
 	return &Config{
@@ -64,6 +71,35 @@ func New(feature string) *Config {
 		TDD: TDDConfig{
 			Enforce:     true,
 			TestCommand: "go test ./...",
+		},
+		TaskTypes: defaultTaskTypes(),
+	}
+}
+
+// defaultTaskTypes returns the default task type configurations.
+func defaultTaskTypes() map[string]TaskType {
+	return map[string]TaskType{
+		"design": {
+			Model:    "claude/opus",
+			Thinking: "extended",
+		},
+		"build": {
+			Model: "claude/sonnet",
+		},
+		"refactor": {
+			Model: "copilot/gpt-4",
+		},
+		"test": {
+			Model: "claude/sonnet",
+		},
+		"fix": {
+			Model: "copilot/gpt-4",
+		},
+		"docs": {
+			Model: "claude/haiku",
+		},
+		"review": {
+			Model: "claude/sonnet",
 		},
 	}
 }
@@ -129,6 +165,9 @@ func (c *Config) applyDefaults() {
 	}
 	if c.TDD.TestCommand == "" {
 		c.TDD.TestCommand = "go test ./..."
+	}
+	if c.TaskTypes == nil {
+		c.TaskTypes = defaultTaskTypes()
 	}
 	// TDD.Enforce defaults to true when not explicitly set
 	// Note: YAML unmarshals missing bool as false, so we can't distinguish

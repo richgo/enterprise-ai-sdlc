@@ -207,3 +207,83 @@ func TestWorkspaceStatus(t *testing.T) {
 		t.Errorf("expected 2 ready tasks, got %d", status.ReadyTasks)
 	}
 }
+
+func TestWorkspaceTaskMDGeneration(t *testing.T) {
+	tmpDir := t.TempDir()
+	ws, err := Init(tmpDir, "test-feature", "claude")
+	if err != nil {
+		t.Fatalf("Init failed: %v", err)
+	}
+
+	// Create a task with type
+	task, err := ws.CreateTaskWithType("Build API", "build", "", nil, 1)
+	if err != nil {
+		t.Fatalf("CreateTaskWithType failed: %v", err)
+	}
+
+	// Check task.md file was created
+	taskPath := filepath.Join(tmpDir, ".flo", "tasks", "TASK-"+task.ID+".md")
+	if _, err := os.Stat(taskPath); os.IsNotExist(err) {
+		t.Fatalf("task.md file not created at %s", taskPath)
+	}
+
+	// Read and verify content
+	content, err := os.ReadFile(taskPath)
+	if err != nil {
+		t.Fatalf("failed to read task file: %v", err)
+	}
+
+	contentStr := string(content)
+	
+	// Check for YAML frontmatter
+	if !contains(contentStr, "---") {
+		t.Error("task.md missing frontmatter markers")
+	}
+	if !contains(contentStr, "id: "+task.ID) {
+		t.Error("task.md missing task ID")
+	}
+	if !contains(contentStr, "status: pending") {
+		t.Error("task.md missing status")
+	}
+	if !contains(contentStr, "type: build") {
+		t.Error("task.md missing type")
+	}
+	if !contains(contentStr, "model: claude/sonnet") {
+		t.Error("task.md missing model from task type")
+	}
+	if !contains(contentStr, "# Build API") {
+		t.Error("task.md missing title")
+	}
+}
+
+func TestWorkspaceCreateTaskWithType(t *testing.T) {
+	tmpDir := t.TempDir()
+	ws, err := Init(tmpDir, "test-feature", "claude")
+	if err != nil {
+		t.Fatalf("Init failed: %v", err)
+	}
+
+	// Create task with design type
+	task, err := ws.CreateTaskWithType("Design architecture", "design", "", nil, 0)
+	if err != nil {
+		t.Fatalf("CreateTaskWithType failed: %v", err)
+	}
+
+	if task.Type != "design" {
+		t.Errorf("expected type 'design', got %q", task.Type)
+	}
+	
+	// Should get model from task type config
+	if task.Model != "claude/opus" {
+		t.Errorf("expected model 'claude/opus', got %q", task.Model)
+	}
+}
+
+func contains(s, substr string) bool {
+	for i := 0; i <= len(s)-len(substr); i++ {
+		if s[i:i+len(substr)] == substr {
+			return true
+		}
+	}
+	return false
+}

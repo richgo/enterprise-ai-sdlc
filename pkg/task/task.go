@@ -3,9 +3,12 @@ package task
 
 import (
 	"fmt"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/richgo/flo/pkg/audit"
+	"gopkg.in/yaml.v3"
 )
 
 // Status represents the current state of a task.
@@ -30,16 +33,19 @@ func (s Status) IsValid() bool {
 
 // Task represents a unit of work within a feature.
 type Task struct {
-	ID          string    `json:"id"`
-	Title       string    `json:"title"`
-	Description string    `json:"description,omitempty"`
-	Status      Status    `json:"status"`
-	Priority    int       `json:"priority,omitempty"`
-	Repo        string    `json:"repo,omitempty"`
-	Deps        []string  `json:"deps,omitempty"`
-	SpecRef     string    `json:"spec_ref,omitempty"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          string    `json:"id" yaml:"id"`
+	Title       string    `json:"title" yaml:"title"`
+	Description string    `json:"description,omitempty" yaml:"description,omitempty"`
+	Status      Status    `json:"status" yaml:"status"`
+	Priority    int       `json:"priority,omitempty" yaml:"priority,omitempty"`
+	Repo        string    `json:"repo,omitempty" yaml:"repo,omitempty"`
+	Deps        []string  `json:"deps,omitempty" yaml:"deps,omitempty"`
+	SpecRef     string    `json:"spec_ref,omitempty" yaml:"spec_ref,omitempty"`
+	Model       string    `json:"model,omitempty" yaml:"model,omitempty"`
+	Fallback    string    `json:"fallback,omitempty" yaml:"fallback,omitempty"`
+	Type        string    `json:"type,omitempty" yaml:"type,omitempty"`
+	CreatedAt   time.Time `json:"created_at" yaml:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at" yaml:"updated_at"`
 }
 
 // New creates a new Task with the given ID and title.
@@ -142,4 +148,54 @@ func (t *Task) IsComplete() bool {
 // IsTerminal returns true if the task is in a terminal state (complete or failed).
 func (t *Task) IsTerminal() bool {
 	return t.Status == StatusComplete || t.Status == StatusFailed
+}
+
+// ParseTaskFile reads a task from a task.md file with YAML frontmatter.
+func ParseTaskFile(path string) (*Task, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read task file: %w", err)
+	}
+
+	content := string(data)
+	
+	// Check for YAML frontmatter (--- ... ---)
+	if !strings.HasPrefix(content, "---\n") {
+		return nil, fmt.Errorf("task file missing YAML frontmatter")
+	}
+
+	// Find end of frontmatter
+	endIdx := strings.Index(content[4:], "\n---\n")
+	if endIdx == -1 {
+		return nil, fmt.Errorf("task file has invalid frontmatter")
+	}
+	endIdx += 4 // Adjust for the offset
+
+	// Extract frontmatter and body
+	frontmatter := content[4:endIdx]
+	body := strings.TrimSpace(content[endIdx+5:])
+
+	// Parse YAML frontmatter
+	var task Task
+	if err := yaml.Unmarshal([]byte(frontmatter), &task); err != nil {
+		return nil, fmt.Errorf("failed to parse frontmatter: %w", err)
+	}
+
+	// Extract title and description from body
+	if body != "" {
+		lines := strings.Split(body, "\n")
+		for i, line := range lines {
+			line = strings.TrimSpace(line)
+			if strings.HasPrefix(line, "# ") {
+				task.Title = strings.TrimPrefix(line, "# ")
+				// Rest is description
+				if i+1 < len(lines) {
+					task.Description = strings.TrimSpace(strings.Join(lines[i+1:], "\n"))
+				}
+				break
+			}
+		}
+	}
+
+	return &task, nil
 }

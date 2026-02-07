@@ -199,6 +199,11 @@ func (w *Workspace) Save() error {
 
 // CreateTask creates a new task in the workspace.
 func (w *Workspace) CreateTask(title, repo string, deps []string, priority int) (*task.Task, error) {
+	return w.CreateTaskWithType(title, "", repo, deps, priority)
+}
+
+// CreateTaskWithType creates a new task with a specific type.
+func (w *Workspace) CreateTaskWithType(title, taskType, repo string, deps []string, priority int) (*task.Task, error) {
 	id := fmt.Sprintf("t-%03d", w.nextID)
 	w.nextID++
 
@@ -206,8 +211,16 @@ func (w *Workspace) CreateTask(title, repo string, deps []string, priority int) 
 	t.Repo = repo
 	t.Deps = deps
 	t.Priority = priority
+	t.Type = taskType
 	t.CreatedAt = time.Now()
 	t.UpdatedAt = time.Now()
+
+	// Set model based on task type
+	if taskType != "" && w.Config.TaskTypes != nil {
+		if typeConfig, ok := w.Config.TaskTypes[taskType]; ok {
+			t.Model = typeConfig.Model
+		}
+	}
 
 	if err := w.Tasks.Add(t); err != nil {
 		w.nextID-- // Rollback ID
@@ -217,6 +230,15 @@ func (w *Workspace) CreateTask(title, repo string, deps []string, priority int) 
 			"error":   err.Error(),
 		})
 		return nil, err
+	}
+
+	// Write task.md file
+	if err := w.writeTaskFile(t); err != nil {
+		audit.Error("workspace.create_task", "Failed to write task file", map[string]interface{}{
+			"task_id": id,
+			"error":   err.Error(),
+		})
+		// Don't fail the task creation if file write fails
 	}
 
 	// Auto-save
@@ -231,6 +253,8 @@ func (w *Workspace) CreateTask(title, repo string, deps []string, priority int) 
 	audit.Info("workspace.create_task", "Task created", map[string]interface{}{
 		"task_id":  id,
 		"title":    title,
+		"type":     taskType,
+		"model":    t.Model,
 		"repo":     repo,
 		"deps":     deps,
 		"priority": priority,
@@ -339,4 +363,53 @@ func (w *Workspace) ReadSpec() (string, error) {
 		return "", err
 	}
 	return string(data), nil
+}
+
+// writeTaskFile writes a task.md file with YAML frontmatter.
+func (w *Workspace) writeTaskFile(t *task.Task) error {
+	easPath := filepath.Join(w.Root, easDir)
+	taskPath := filepath.Join(easPath, tasksDir, fmt.Sprintf("TASK-%s.md", t.ID))
+
+	// Build YAML frontmatter
+	frontmatter := fmt.Sprintf(`---
+id: %s
+status: %s`, t.ID, t.Status)
+
+	if t.Model != "" {
+		frontmatter += fmt.Sprintf("\nmodel: %s", t.Model)
+	}
+	if t.Fallback != "" {
+		frontmatter += fmt.Sprintf("\nfallback: %s", t.Fallback)
+	}
+	if t.Type != "" {
+		frontmatter += fmt.Sprintf("\ntype: %s", t.Type)
+	}
+	if t.Priority > 0 {
+		frontmatter += fmt.Sprintf("\npriority: %d", t.Priority)
+	}
+	if t.Repo != "" {
+		frontmatter += fmt.Sprintf("\nrepo: %s", t.Repo)
+	}
+	if len(t.Deps) > 0 {
+		frontmatter += "\ndeps:"
+		for _, dep := range t.Deps {
+			frontmatter += fmt.Sprintf("\n  - %s", dep)
+		}
+	}
+
+	frontmatter += "\n---\n\n"
+
+	// Build body
+	body := fmt.Sprintf("# %s\n", t.Title)
+	if t.Description != "" {
+		body += fmt.Sprintf("\n%s\n", t.Description)
+	}
+
+	content := frontmatter + body
+
+	if err := os.WriteFile(taskPath, []byte(content), 0644); err != nil {
+		return fmt.Errorf("failed to write task file: %w", err)
+	}
+
+	return nil
 }

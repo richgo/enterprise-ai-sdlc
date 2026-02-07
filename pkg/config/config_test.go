@@ -228,3 +228,74 @@ func TestConfigWithCopilotSettings(t *testing.T) {
 		t.Errorf("API key env mismatch: %s", loaded.Copilot.Provider.APIKeyEnv)
 	}
 }
+
+func TestConfigTaskTypes(t *testing.T) {
+	cfg := New("test")
+
+	// Check that default task types are initialized
+	if cfg.TaskTypes == nil {
+		t.Fatal("TaskTypes should be initialized by default")
+	}
+
+	// Check for expected task types
+	expectedTypes := []string{"design", "build", "refactor", "test", "fix", "docs", "review"}
+	for _, typeName := range expectedTypes {
+		taskType, exists := cfg.TaskTypes[typeName]
+		if !exists {
+			t.Errorf("expected task type %q to exist", typeName)
+			continue
+		}
+		if taskType.Model == "" {
+			t.Errorf("task type %q should have a model", typeName)
+		}
+	}
+
+	// Verify specific models
+	if cfg.TaskTypes["design"].Model != "claude/opus" {
+		t.Errorf("design type should use claude/opus, got %q", cfg.TaskTypes["design"].Model)
+	}
+	if cfg.TaskTypes["design"].Thinking != "extended" {
+		t.Errorf("design type should have extended thinking, got %q", cfg.TaskTypes["design"].Thinking)
+	}
+	if cfg.TaskTypes["build"].Model != "claude/sonnet" {
+		t.Errorf("build type should use claude/sonnet, got %q", cfg.TaskTypes["build"].Model)
+	}
+	if cfg.TaskTypes["docs"].Model != "claude/haiku" {
+		t.Errorf("docs type should use claude/haiku, got %q", cfg.TaskTypes["docs"].Model)
+	}
+}
+
+func TestConfigTaskTypesPersistence(t *testing.T) {
+	cfg := New("test")
+	cfg.TaskTypes["custom"] = TaskType{
+		Model:    "claude/sonnet",
+		Thinking: "normal",
+	}
+
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, "config.yaml")
+
+	if err := cfg.Save(configPath); err != nil {
+		t.Fatalf("failed to save: %v", err)
+	}
+
+	loaded, err := Load(configPath)
+	if err != nil {
+		t.Fatalf("failed to load: %v", err)
+	}
+
+	if loaded.TaskTypes == nil {
+		t.Fatal("TaskTypes not loaded")
+	}
+
+	customType, exists := loaded.TaskTypes["custom"]
+	if !exists {
+		t.Fatal("custom task type not preserved")
+	}
+	if customType.Model != "claude/sonnet" {
+		t.Errorf("custom type model mismatch: got %q", customType.Model)
+	}
+	if customType.Thinking != "normal" {
+		t.Errorf("custom type thinking mismatch: got %q", customType.Thinking)
+	}
+}

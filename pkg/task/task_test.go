@@ -2,6 +2,7 @@ package task
 
 import (
 	"encoding/json"
+	"os"
 	"testing"
 	"time"
 )
@@ -220,3 +221,113 @@ func containsHelper(s, substr string) bool {
 	}
 	return false
 }
+
+func TestParseTaskFile(t *testing.T) {
+	tests := []struct {
+		name       string
+		content    string
+		wantErr    bool
+		wantID     string
+		wantTitle  string
+		wantModel  string
+		wantType   string
+		wantStatus Status
+	}{
+		{
+			name: "valid task with frontmatter",
+			content: `---
+id: t-001
+status: pending
+model: claude/sonnet
+type: build
+---
+
+# Implement feature X
+
+This is the description.`,
+			wantErr:    false,
+			wantID:     "t-001",
+			wantTitle:  "Implement feature X",
+			wantModel:  "claude/sonnet",
+			wantType:   "build",
+			wantStatus: StatusPending,
+		},
+		{
+			name: "task with fallback",
+			content: `---
+id: t-002
+status: in_progress
+model: claude/opus
+fallback: copilot/gpt-4
+type: design
+---
+
+# Design API`,
+			wantErr:    false,
+			wantID:     "t-002",
+			wantTitle:  "Design API",
+			wantModel:  "claude/opus",
+			wantType:   "design",
+			wantStatus: StatusInProgress,
+		},
+		{
+			name:    "missing frontmatter",
+			content: "# Just a title",
+			wantErr: true,
+		},
+		{
+			name: "invalid frontmatter",
+			content: `---
+invalid yaml: [unclosed
+---`,
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Write temp file
+			tmpfile, err := os.CreateTemp("", "task-*.md")
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer os.Remove(tmpfile.Name())
+
+			if _, err := tmpfile.Write([]byte(tt.content)); err != nil {
+				t.Fatal(err)
+			}
+			tmpfile.Close()
+
+			// Parse
+			task, err := ParseTaskFile(tmpfile.Name())
+
+			if tt.wantErr {
+				if err == nil {
+					t.Error("expected error, got nil")
+				}
+				return
+			}
+
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+
+			if task.ID != tt.wantID {
+				t.Errorf("ID: got %q, want %q", task.ID, tt.wantID)
+			}
+			if task.Title != tt.wantTitle {
+				t.Errorf("Title: got %q, want %q", task.Title, tt.wantTitle)
+			}
+			if task.Model != tt.wantModel {
+				t.Errorf("Model: got %q, want %q", task.Model, tt.wantModel)
+			}
+			if task.Type != tt.wantType {
+				t.Errorf("Type: got %q, want %q", task.Type, tt.wantType)
+			}
+			if task.Status != tt.wantStatus {
+				t.Errorf("Status: got %q, want %q", task.Status, tt.wantStatus)
+			}
+		})
+	}
+}
+

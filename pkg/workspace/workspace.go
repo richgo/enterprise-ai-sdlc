@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/richgo/enterprise-ai-sdlc/pkg/config"
-	"github.com/richgo/enterprise-ai-sdlc/pkg/task"
+	"github.com/richgo/flo/pkg/config"
+	"github.com/richgo/flo/pkg/task"
 )
 
 const (

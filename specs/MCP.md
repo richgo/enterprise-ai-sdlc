@@ -17,7 +17,7 @@ MCP uses JSON-RPC 2.0 over stdio. Messages are newline-delimited JSON.
 ## Commands
 
 ```bash
-eas mcp serve          # Start MCP server on stdio
+`flo mcp serve          # Start MCP server on stdio
 ```
 
 ## Tool Mapping

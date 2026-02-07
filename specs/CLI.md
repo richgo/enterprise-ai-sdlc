@@ -6,34 +6,34 @@ The `eas` CLI is the main entry point for engineers. It provides commands for in
 
 ## Commands
 
-### eas init
+### flo init
 Initialize a new feature workspace.
 
 ```bash
-eas init <feature-name> [--backend claude|copilot]
+`flo init <feature-name> [--backend claude|copilot]
 ```
 
 Creates:
-- `.eas/config.yaml`
-- `.eas/SPEC.md` (template)
-- `.eas/tasks/manifest.json`
+- `.flo/config.yaml`
+- `.flo/SPEC.md` (template)
+- `.flo/tasks/manifest.json`
 
-### eas task
+### flo task
 Task management subcommands.
 
 ```bash
-eas task list [--status pending|in_progress|complete] [--repo <name>]
-eas task create <title> [--repo <name>] [--deps <id,...>] [--priority <n>]
-eas task get <id>
-eas task claim <id>
-eas task complete <id>
+`flo task list [--status pending|in_progress|complete] [--repo <name>]
+`flo task create <title> [--repo <name>] [--deps <id,...>] [--priority <n>]
+`flo task get <id>
+`flo task claim <id>
+`flo task complete <id>
 ```
 
-### eas status
+### flo status
 Show feature status overview.
 
 ```bash
-eas status
+`flo status
 ```
 
 Displays:
@@ -42,42 +42,42 @@ Displays:
 - Ready tasks (can be started)
 - Recent activity
 
-### eas work
+### flo work
 Start agent work on a task.
 
 ```bash
-eas work <task-id> [--backend claude|copilot]
+`flo work <task-id> [--backend claude|copilot]
 ```
 
 ### eas mcp
 MCP server for Claude integration.
 
 ```bash
-eas mcp serve [--port <n>]
+`flo mcp serve [--port <n>]
 ```
 
 ## Acceptance Criteria
 
-### eas init
-- [ ] Creates .eas directory structure
+### flo init
+- [ ] Creates .flo directory structure
 - [ ] Writes default config.yaml
 - [ ] Creates empty SPEC.md template
 - [ ] Initializes empty task manifest
 - [ ] Returns error if already initialized
 
-### eas task list
+### flo task list
 - [ ] Lists all tasks by default
 - [ ] Filters by status
 - [ ] Filters by repo
 - [ ] Shows task ID, title, status, deps
 
-### eas task create
+### flo task create
 - [ ] Creates task with unique ID
 - [ ] Validates deps exist
 - [ ] Saves to manifest
 - [ ] Returns new task ID
 
-### eas status
+### flo status
 - [ ] Shows feature name
 - [ ] Shows task counts
 - [ ] Shows ready tasks

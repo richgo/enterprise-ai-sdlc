@@ -75,13 +75,13 @@ A Go CLI/SDK for AI-assisted software development using the GitHub Copilot SDK. 
 The command-line interface. Single binary, subcommand pattern.
 
 ```bash
-eas init                          # Initialize workspace
-eas feature create <name>         # Create feature (cross-repo)
-eas task create <title>           # Create task
-eas task list [--ready]           # List tasks (--ready = unblocked)
-eas run [--parallel N]            # Execute tasks (1-30 agents)
-eas status                        # Show progress
-eas graph                         # Visualize task DAG
+`flo init                          # Initialize workspace
+`flo feature create <name>         # Create feature (cross-repo)
+`flo task create <title>           # Create task
+`flo task list [--ready]           # List tasks (--ready = unblocked)
+`flo run [--parallel N]            # Execute tasks (1-30 agents)
+`flo status                        # Show progress
+`flo graph                         # Visualize task DAG
 ```
 
 ### 2. Orchestrator (`pkg/orchestrator/`)
@@ -317,7 +317,7 @@ Git worktree lifecycle management. **One worktree per task** for context isolati
 
 ```go
 type WorktreeManager struct {
-    baseDir string  // e.g., ~/.eas/worktrees/
+    baseDir string  // e.g., ~/.flo/worktrees/
 }
 
 type Worktree struct {
@@ -335,7 +335,7 @@ func (w *WorktreeManager) List() ([]*Worktree, error)
 **Worktree Strategy:**
 ```bash
 # For task "auth-001" in repo "mobile-android":
-git worktree add ~/.eas/worktrees/auth-001 -b task/auth-001
+git worktree add ~/.flo/worktrees/auth-001 -b task/auth-001
 
 # Agent works in isolated directory with clean context
 # On completion: commit, push branch, remove worktree
@@ -391,7 +391,7 @@ func (a *Agent) Execute(ctx context.Context) (*TaskResult, error)
 ### Directory Structure
 
 ```
-~/.eas/                              # Global config
+~/.flo/                              # Global config
 ├── config.yaml                      # CLI config
 └── worktrees/                       # Active worktrees (one per task)
     ├── auth-001/                    
@@ -440,7 +440,7 @@ tdd:
 git:
   auto_push: true
   branch_prefix: "task/"
-  worktree_dir: "~/.eas/worktrees"
+  worktree_dir: "~/.flo/worktrees"
 ```
 
 #### Task Markdown Files (Source of Truth)
@@ -700,7 +700,7 @@ Provides fast lookups without parsing all markdown files.
 ## 2026-02-04 10:45 — auth-002 started
 
 **Agent:** agent-2
-**Worktree:** ~/.eas/worktrees/auth-002
+**Worktree:** ~/.flo/worktrees/auth-002
 
 ---
 ```
@@ -869,36 +869,36 @@ Dependency graph:
 
 ```bash
 # Workspace management
-eas init                              # Initialize workspace
-eas config set parallel 20            # Configure
+`flo init                              # Initialize workspace
+`flo config set parallel 20            # Configure
 
 # Repository management  
-eas repo add <name> <url> [--type service|web|ios|android]
-eas repo list
-eas repo sync                         # Fetch all repos
+`flo repo add <name> <url> [--type service|web|ios|android]
+`flo repo list
+`flo repo sync                         # Fetch all repos
 
 # Feature management
-eas feature create <name>             # Create feature
-eas feature list
-eas feature status <id>               # Show feature progress
+`flo feature create <name>             # Create feature
+`flo feature list
+`flo feature status <id>               # Show feature progress
 
 # Task management
-eas task create <title> --repo <repo> --test <file> [--deps id1,id2]
-eas task list [--ready] [--feature <id>]
-eas task show <id>
-eas task graph [--feature <id>]       # ASCII DAG visualization
+`flo task create <title> --repo <repo> --test <file> [--deps id1,id2]
+`flo task list [--ready] [--feature <id>]
+`flo task show <id>
+`flo task graph [--feature <id>]       # ASCII DAG visualization
 
 # Execution
-eas run                               # Run all ready tasks (default parallel)
-eas run --task <id>                   # Run single task
-eas run --parallel 30                 # Run with 30 agents
-eas run --feature <id>                # Run all tasks for feature
-eas run --dry-run                     # Show what would run
+`flo run                               # Run all ready tasks (default parallel)
+`flo run --task <id>                   # Run single task
+`flo run --parallel 30                 # Run with 30 agents
+`flo run --feature <id>                # Run all tasks for feature
+`flo run --dry-run                     # Show what would run
 
 # Monitoring
-eas status                            # Overall status
-eas agents                            # List active agents
-eas logs <task-id>                    # View agent logs
+`flo status                            # Overall status
+`flo agents                            # List active agents
+`flo logs <task-id>                    # View agent logs
 ```
 
 ---

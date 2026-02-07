@@ -480,7 +480,7 @@ func handleTaskComplete(args map[string]any) (string, error) {
 ## Configuration
 
 ```yaml
-# .eas/config.yaml
+# .flo/config.yaml
 
 feature: user-authentication
 version: 1
@@ -526,17 +526,17 @@ repos:
 
 ```bash
 # Initialize with backend choice
-eas init my-feature --backend claude
-eas init my-feature --backend copilot
+`flo init my-feature --backend claude
+`flo init my-feature --backend copilot
 
 # Override backend for single command
-eas work ua-001 --backend copilot
+`flo work ua-001 --backend copilot
 
 # Check current config
-eas config show
+`flo config show
 
 # Switch backends
-eas config set backend copilot
+`flo config set backend copilot
 ```
 
 ---

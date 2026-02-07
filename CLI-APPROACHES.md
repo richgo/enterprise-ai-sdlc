@@ -106,12 +106,12 @@ client.SetPreToolUseHandler(func(input copilot.PreToolUseHookInput, inv copilot.
 
 ```bash
 # New CLI to learn
-eas init my-feature
-eas task create "Implement OAuth" --repo android --deps auth-api
-eas task start ua-001
-eas agent run --tdd    # Runs agent loop with TDD enforcement
-eas task complete
-eas status
+`flo init my-feature
+`flo task create "Implement OAuth" --repo android --deps auth-api
+`flo task start ua-001
+`flo agent run --tdd    # Runs agent loop with TDD enforcement
+`flo task complete
+`flo status
 ```
 
 ### Architecture
@@ -128,7 +128,7 @@ eas status
 │  • Direct LLM API calls             │
 │                                     │
 │  Storage:                           │
-│  • .eas/ directory                  │
+│  • .flo/ directory                  │
 │  • Git-native (worktrees, commits)  │
 └────────────────────────────────────┘
 ```
@@ -158,15 +158,15 @@ eas status
 
 ```bash
 # Familiar init/status commands
-eas init my-feature
-eas task create "Implement OAuth" --repo android
+`flo init my-feature
+`flo task create "Implement OAuth" --repo android
 
 # Delegates to Claude Code with pre-configured context
-eas work ua-001
-# Equivalent to: claude --mcp-config .eas/mcp.json --system-prompt "$(eas context ua-001)"
+`flo work ua-001
+# Equivalent to: claude --mcp-config .flo/mcp.json --system-prompt "$(eas context ua-001)"
 
 # Or use Claude directly with EAS context
-claude --mcp-config .eas/mcp.json "work on task ua-001"
+claude --mcp-config .flo/mcp.json "work on task ua-001"
 ```
 
 ### Architecture
@@ -178,9 +178,9 @@ claude --mcp-config .eas/mcp.json "work on task ua-001"
 ├─────────────────────────────────────────────────────────┤
 │                                                          │
 │  State Management:          Agent Delegation:            │
-│  • eas init                 • eas work → claude/copilot  │
-│  • eas task create/list     • eas agent → parallel runs  │
-│  • eas status               • eas review → PR creation   │
+│  • flo init                 • flo work → claude/copilot  │
+│  • flo task create/list     • eas agent → parallel runs  │
+│  • flo status               • eas review → PR creation   │
 │  • eas sync (cross-repo)                                 │
 │                                                          │
 ├─────────────────────────────────────────────────────────┤
@@ -204,23 +204,23 @@ claude --mcp-config .eas/mcp.json "work on task ua-001"
 
 ```bash
 # Project/Task Management (eas-native)
-eas init <feature-name>              # Create .eas/ structure
-eas task create <title> [--deps]     # Add task to DAG
-eas task list [--status] [--repo]    # Query tasks
-eas status                           # Overview dashboard
+`flo init <feature-name>              # Create .flo/ structure
+`flo task create <title> [--deps]     # Add task to DAG
+`flo task list [--status] [--repo]    # Query tasks
+`flo status                           # Overview dashboard
 
 # Agent Delegation (wraps claude/copilot)
-eas work <task-id>                   # Start agent on task
-eas work --parallel 5                # Run 5 agents on ready tasks
-eas agent config                     # Configure which CLI to use
+`flo work <task-id>                   # Start agent on task
+`flo work --parallel 5                # Run 5 agents on ready tasks
+`flo agent config                     # Configure which CLI to use
 
 # Cross-Repo Coordination
-eas repo add <name> <url>            # Link repo to feature
-eas sync                             # Sync task state across repos
+`flo repo add <name> <url>            # Link repo to feature
+`flo sync                             # Sync task state across repos
 
 # CI/CD Integration
-eas ci check                         # Verify all tasks pass
-eas ci report                        # Generate status report
+`flo ci check                         # Verify all tasks pass
+`flo ci report                        # Generate status report
 ```
 
 ### MCP Tools (provided by `eas mcp serve`)
@@ -267,7 +267,7 @@ eas_repo_task_status(repo: string)   // Tasks in other repos
 |----------|--------------|-------------------|
 | **Extend** | MCP config, context dirs | claude/copilot CLI |
 | **New CLI** | All of eas (10+ commands) | Git |
-| **Wrapper** | eas init/task/status (5 cmds) | claude/copilot CLI |
+| **Wrapper** | flo init/task/status (5 cmds) | claude/copilot CLI |
 
 ### Daily Workflow
 
@@ -279,16 +279,16 @@ claude "implement next task from SPEC.md"  # EAS tools auto-available via MCP
 
 **New CLI:**
 ```bash
-eas task start ua-001
-eas agent run --tdd
-eas task complete
+`flo task start ua-001
+`flo agent run --tdd
+`flo task complete
 ```
 
 **Wrapper (Recommended):**
 ```bash
-eas work ua-001           # Sets up context, launches claude
+`flo work ua-001           # Sets up context, launches claude
 # ... claude does the work ...
-eas status                # Check progress
+`flo status                # Check progress
 ```
 
 ---
@@ -310,12 +310,12 @@ eas status                # Check progress
    - TDD enforcement tools
    - Works with vanilla claude/copilot
 
-2. **Phase 2: State Commands** (`eas init/task/status`)
+2. **Phase 2: State Commands** (`flo init/task/status`)
    - Git-native storage
    - Cross-repo linking
    - DAG visualization
 
-3. **Phase 3: Orchestration** (`eas work/agent`)
+3. **Phase 3: Orchestration** (`flo work/agent`)
    - Parallel agent coordination
    - Automatic task assignment
    - Progress monitoring
@@ -325,7 +325,7 @@ eas status                # Check progress
 ## File Structure
 
 ```
-.eas/
+.flo/
 ├── config.json           # Feature config, linked repos
 ├── SPEC.md               # Human-readable specification
 ├── tasks/
@@ -348,5 +348,5 @@ eas status                # Check progress
 1. [ ] Prototype `eas mcp serve` with core tools
 2. [ ] Test with Claude Code on real feature
 3. [ ] Add TDD hooks (pre-commit test enforcement)
-4. [ ] Build `eas init/task/status` commands
+4. [ ] Build `flo init/task/status` commands
 5. [ ] Cross-repo sync mechanism

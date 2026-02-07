@@ -183,7 +183,7 @@ openspec/
 | **Fast-Forward** | Generate all docs in one step | Add `eas feature init --full` |
 | **Archive Workflow** | Completed features archived with date | Add `eas feature archive <id>` |
 | **Fluid Iteration** | Update any artifact anytime | Our markdown approach already allows this |
-| **Dashboard** | Visual task management | Consider web UI for `eas status` |
+| **Dashboard** | Visual task management | Consider web UI for `flo status` |
 
 ### Gaps OpenSpec Has (We Can Fill)
 
@@ -255,8 +255,8 @@ workspace/
 
 **New Command:**
 ```bash
-eas clarify <feature-id>  # Interactive Q&A to find gaps
-eas analyze <feature-id>  # Cross-artifact consistency check
+`flo clarify <feature-id>  # Interactive Q&A to find gaps
+`flo analyze <feature-id>  # Cross-artifact consistency check
 ```
 
 ### 5.3 Adopt from OpenSpec
@@ -278,8 +278,8 @@ archive/
 
 **New Commands:**
 ```bash
-eas feature init <name> --full  # Fast-forward: create all docs
-eas feature archive <id>        # Archive completed feature
+`flo feature init <name> --full  # Fast-forward: create all docs
+`flo feature archive <id>        # Archive completed feature
 ```
 
 ---
@@ -321,29 +321,29 @@ workspace/
 
 ```bash
 # Workspace
-eas init                              # Initialize workspace + constitution
-eas context update                    # Update context docs interactively
+`flo init                              # Initialize workspace + constitution
+`flo context update                    # Update context docs interactively
 
 # Features
-eas feature new <name>                # Create feature with PROPOSAL.md
-eas feature init <name> --full        # Fast-forward: all docs at once
-eas feature clarify <id>              # Q&A to find spec gaps
-eas feature analyze <id>              # Cross-artifact consistency check
-eas feature archive <id>              # Archive completed feature
+`flo feature new <name>                # Create feature with PROPOSAL.md
+`flo feature init <name> --full        # Fast-forward: all docs at once
+`flo feature clarify <id>              # Q&A to find spec gaps
+`flo feature analyze <id>              # Cross-artifact consistency check
+`flo feature archive <id>              # Archive completed feature
 
 # Tasks
-eas task create <title>               # Create task
-eas task list [--ready]               # List tasks
-eas task graph                        # Visualize DAG
+`flo task create <title>               # Create task
+`flo task list [--ready]               # List tasks
+`flo task graph                        # Visualize DAG
 
 # Execution
-eas run [--parallel N]                # Execute tasks
-eas run --verify                      # With phase verification
-eas revert <target>                   # Git-aware revert
+`flo run [--parallel N]                # Execute tasks
+`flo run --verify                      # With phase verification
+`flo revert <target>                   # Git-aware revert
 
 # Monitoring
-eas status                            # Overall status
-eas dashboard                         # Web UI (future)
+`flo status                            # Overall status
+`flo dashboard                         # Web UI (future)
 ```
 
 ---

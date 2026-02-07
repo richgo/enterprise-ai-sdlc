@@ -2,7 +2,7 @@
 
 ## Overview
 
-Config manages the feature configuration stored in `.eas/config.yaml`. It defines the backend, repos, and TDD settings.
+Config manages the feature configuration stored in `.flo/config.yaml`. It defines the backend, repos, and TDD settings.
 
 ## Data Model
 
@@ -51,13 +51,13 @@ type Repo struct {
 ## Acceptance Criteria
 
 ### Load Config
-- [ ] Load from .eas/config.yaml
+- [ ] Load from .flo/config.yaml
 - [ ] Return error if file not found
 - [ ] Return error if YAML invalid
 - [ ] Set defaults for optional fields
 
 ### Save Config
-- [ ] Save to .eas/config.yaml
+- [ ] Save to .flo/config.yaml
 - [ ] Create directory if not exists
 - [ ] Preserve comments (if possible)
 

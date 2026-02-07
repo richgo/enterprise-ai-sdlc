@@ -1,4 +1,4 @@
-module github.com/richgo/enterprise-ai-sdlc
+module github.com/richgo/flo
 
 go 1.24.4
 

@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/richgo/enterprise-ai-sdlc/pkg/task"
+	"github.com/richgo/flo/pkg/task"
 )
 
 // MockBackend is a test backend that records calls and returns configured responses.

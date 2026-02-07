@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/richgo/enterprise-ai-sdlc/pkg/tools"
+	"github.com/richgo/flo/pkg/tools"
 )
 
 func TestMCPInitialize(t *testing.T) {

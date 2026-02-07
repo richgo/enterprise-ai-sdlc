@@ -11,51 +11,51 @@ EAS orchestrates AI agents for structured development workflows:
 - **Spec-Driven**: Start with SPEC.md, break into tasks
 - **Test-Driven**: Agents must pass tests before completing tasks
 - **Multi-Backend**: Claude Code or GitHub Copilot SDK
-- **Git-Native**: All state stored in `.eas/` directory
+- **Git-Native**: All state stored in `.flo/` directory
 
 ## Installation
 
 ```bash
-go install github.com/richgo/enterprise-ai-sdlc/cmd/eas@latest
+go install github.com/richgo/flo/cmd/eas@latest
 ```
 
 ## Quick Start
 
 ```bash
 # Initialize a feature workspace
-eas init user-auth --backend claude
+`flo init user-auth --backend claude
 
 # Edit the specification
-vim .eas/SPEC.md
+vim .flo/SPEC.md
 
 # Create tasks
-eas task create "Implement OAuth" --repo android
-eas task create "Add token storage" --repo android --deps t-001
-eas task create "iOS OAuth" --repo ios
+`flo task create "Implement OAuth" --repo android
+`flo task create "Add token storage" --repo android --deps t-001
+`flo task create "iOS OAuth" --repo ios
 
 # Check status
-eas status
+`flo status
 
 # Start agent work on a task
-eas work t-001
+`flo work t-001
 ```
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `eas init <feature>` | Initialize workspace |
-| `eas task list` | List all tasks |
-| `eas task create <title>` | Create a task |
-| `eas task get <id>` | Get task details |
-| `eas status` | Show workspace status |
-| `eas work <task-id>` | Run agent on task |
+| `flo init <feature>` | Initialize workspace |
+| `flo task list` | List all tasks |
+| `flo task create <title>` | Create a task |
+| `flo task get <id>` | Get task details |
+| `flo status` | Show workspace status |
+| `flo work <task-id>` | Run agent on task |
 | `eas mcp serve` | Start MCP server |
 
 ## Architecture
 
 ```
-.eas/
+.flo/
 ├── config.yaml       # Feature configuration
 ├── SPEC.md           # Feature specification
 ├── tasks/
@@ -93,9 +93,9 @@ go test ./...
 go build -o eas ./cmd/eas
 
 # Test locally
-./eas init test-feature
-./eas task create "Test task"
-./eas status
+./flo init test-feature
+./flo task create "Test task"
+./flo status
 ```
 
 ## Documentation

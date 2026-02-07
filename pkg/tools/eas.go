@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/richgo/enterprise-ai-sdlc/pkg/task"
+	"github.com/richgo/flo/pkg/task"
 )
 
 // TestRunner is the interface for running tests.

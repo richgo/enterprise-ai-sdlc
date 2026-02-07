@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/richgo/enterprise-ai-sdlc/pkg/task"
+	"github.com/richgo/flo/pkg/task"
 )
 
 // CopilotConfig holds configuration for the Copilot backend.

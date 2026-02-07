@@ -231,7 +231,7 @@ Use Beads for task tracking, add a lightweight `feature-graph.json` that maps be
 ```
 ┌────────────────────────────────────────────────────┐
 │                    CLI / SDK                        │
-│         (enterprise-ai-sdlc / eas CLI)             │
+│         (flo / eas CLI)             │
 ├────────────────────────────────────────────────────┤
 │                                                     │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐         │
@@ -324,7 +324,7 @@ OAuth2 + MFA for all platforms.
 ## 5. Next Steps
 
 1. **Decide on architecture**: Central feature repo vs distributed?
-2. **Prototype CLI**: `eas init`, `eas task create`, `eas status`
+2. **Prototype CLI**: `flo init`, `flo task create`, `flo status`
 3. **Define agent handoff protocol**: How does Research → Design → Build flow?
 4. **TDD integration**: How to enforce tests before task completion?
 5. **Graph visualization**: Terminal UI (like beads_viewer) or web?

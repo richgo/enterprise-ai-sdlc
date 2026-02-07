@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os/exec"
 
-	"github.com/richgo/enterprise-ai-sdlc/pkg/task"
+	"github.com/richgo/flo/pkg/task"
 )
 
 // ClaudeConfig holds configuration for the Claude backend.

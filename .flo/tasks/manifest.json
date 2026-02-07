@@ -1,6 +1,22 @@
 {
-  "version": 63,
+  "version": 69,
   "tasks": [
+    {
+      "id": "t-002",
+      "title": "Remove committed binary, add Makefile with build/test/lint targets",
+      "status": "complete",
+      "priority": 1,
+      "created_at": "2026-02-07T12:18:01.514433329Z",
+      "updated_at": "2026-02-07T12:49:09.797025183Z"
+    },
+    {
+      "id": "t-020",
+      "title": "Quota tracking per backend (requests, tokens, rate limits)",
+      "status": "complete",
+      "priority": 1,
+      "created_at": "2026-02-07T17:28:15.293665351Z",
+      "updated_at": "2026-02-07T18:16:02.8610059Z"
+    },
     {
       "id": "t-011",
       "title": "Contribution Guidelines - CONTRIBUTING.md, CODE_OF_CONDUCT, issue templates",
@@ -8,6 +24,142 @@
       "priority": 2,
       "created_at": "2026-02-07T12:18:17.781046212Z",
       "updated_at": "2026-02-07T12:49:09.861952941Z"
+    },
+    {
+      "id": "t-004",
+      "title": "Concurrency \u0026 Conflict Resolution - file locking, optimistic concurrency for manifest",
+      "status": "complete",
+      "priority": 1,
+      "created_at": "2026-02-07T12:18:07.853111734Z",
+      "updated_at": "2026-02-07T12:49:09.830629832Z"
+    },
+    {
+      "id": "t-008",
+      "title": "Authentication \u0026 Authorization - RBAC, team permissions, SSO/OIDC integration",
+      "status": "complete",
+      "priority": 3,
+      "created_at": "2026-02-07T12:18:13.176634249Z",
+      "updated_at": "2026-02-07T17:07:54.02695798Z"
+    },
+    {
+      "id": "t-017",
+      "title": "Implement Codex CLI backend (codex)",
+      "status": "complete",
+      "priority": 2,
+      "created_at": "2026-02-07T17:28:10.099388507Z",
+      "updated_at": "2026-02-07T18:21:36.463323842Z"
+    },
+    {
+      "id": "t-006",
+      "title": "Error Handling \u0026 Retry - circuit breaker, retry logic, fallback for agent backends",
+      "status": "complete",
+      "priority": 2,
+      "created_at": "2026-02-07T12:18:07.867108884Z",
+      "updated_at": "2026-02-07T12:54:53.584198773Z"
+    },
+    {
+      "id": "t-003",
+      "title": "Versioning \u0026 Release Process - tags, changelog, goreleaser",
+      "status": "complete",
+      "priority": 2,
+      "created_at": "2026-02-07T12:18:01.526798841Z",
+      "updated_at": "2026-02-07T12:49:09.811603087Z"
+    },
+    {
+      "id": "t-009",
+      "title": "Observability \u0026 Audit Trail - structured logs, event history, agent action tracking",
+      "status": "complete",
+      "priority": 2,
+      "created_at": "2026-02-07T12:18:13.182788543Z",
+      "updated_at": "2026-02-07T12:49:09.845257199Z"
+    },
+    {
+      "id": "t-012",
+      "title": "Lead by Example - ensure all packages have comprehensive test coverage",
+      "status": "complete",
+      "priority": 1,
+      "created_at": "2026-02-07T12:18:17.789687452Z",
+      "updated_at": "2026-02-07T17:07:54.041110853Z"
+    },
+    {
+      "id": "t-025",
+      "title": "Update README with BYO AI vision and multi-provider support",
+      "status": "complete",
+      "priority": 2,
+      "created_at": "2026-02-07T17:28:21.272708426Z",
+      "updated_at": "2026-02-07T18:21:36.47442095Z"
+    },
+    {
+      "id": "t-007",
+      "title": "Secret Management - .env handling, credential docs, secure token storage",
+      "status": "complete",
+      "priority": 2,
+      "created_at": "2026-02-07T12:18:07.873591416Z",
+      "updated_at": "2026-02-07T12:54:53.590567861Z"
+    },
+    {
+      "id": "t-015",
+      "title": "Add task types to config: design, build, refactor, test, fix, docs, review",
+      "status": "complete",
+      "priority": 1,
+      "created_at": "2026-02-07T17:28:05.053481387Z",
+      "updated_at": "2026-02-07T17:33:48.107609846Z"
+    },
+    {
+      "id": "t-021",
+      "title": "Auto-failover to fallback model on quota exhaustion (429/rate limit)",
+      "status": "complete",
+      "priority": 1,
+      "created_at": "2026-02-07T17:28:15.300054869Z",
+      "updated_at": "2026-02-07T18:16:02.866371937Z"
+    },
+    {
+      "id": "t-022",
+      "title": "Add 'flo quota status' command showing usage per backend",
+      "status": "complete",
+      "priority": 2,
+      "created_at": "2026-02-07T17:28:15.304795229Z",
+      "updated_at": "2026-02-07T18:21:36.47045457Z"
+    },
+    {
+      "id": "t-024",
+      "title": "Generate task.md files with frontmatter (not just manifest.json)",
+      "status": "complete",
+      "priority": 1,
+      "created_at": "2026-02-07T17:28:21.268202194Z",
+      "updated_at": "2026-02-07T17:33:48.11453003Z"
+    },
+    {
+      "id": "t-016",
+      "title": "CLI reads model from task.md frontmatter when running flo work",
+      "status": "complete",
+      "priority": 1,
+      "created_at": "2026-02-07T17:28:05.058003453Z",
+      "updated_at": "2026-02-07T18:16:02.853716636Z"
+    },
+    {
+      "id": "t-010",
+      "title": "MCP Server Documentation - protocol contract, agent discovery, concurrent sessions",
+      "status": "complete",
+      "priority": 2,
+      "created_at": "2026-02-07T12:18:13.188332636Z",
+      "updated_at": "2026-02-07T17:07:54.036909856Z"
+    },
+    {
+      "id": "t-019",
+      "title": "Backend registry with dynamic provider lookup",
+      "status": "complete",
+      "priority": 1,
+      "created_at": "2026-02-07T17:28:10.110215887Z",
+      "updated_at": "2026-02-07T17:33:48.110854292Z"
+    },
+    {
+      "id": "t-018",
+      "title": "Implement Gemini CLI backend (gemini)",
+      "status": "complete",
+      "priority": 2,
+      "created_at": "2026-02-07T17:28:10.105709711Z",
+      "updated_at": "2026-02-07T18:21:36.466887243Z"
     },
     {
       "id": "t-001",
@@ -26,110 +178,12 @@
       "updated_at": "2026-02-07T12:54:53.57352564Z"
     },
     {
-      "id": "t-006",
-      "title": "Error Handling \u0026 Retry - circuit breaker, retry logic, fallback for agent backends",
-      "status": "complete",
-      "priority": 2,
-      "created_at": "2026-02-07T12:18:07.867108884Z",
-      "updated_at": "2026-02-07T12:54:53.584198773Z"
-    },
-    {
-      "id": "t-010",
-      "title": "MCP Server Documentation - protocol contract, agent discovery, concurrent sessions",
-      "status": "complete",
-      "priority": 2,
-      "created_at": "2026-02-07T12:18:13.188332636Z",
-      "updated_at": "2026-02-07T17:07:54.036909856Z"
-    },
-    {
-      "id": "t-004",
-      "title": "Concurrency \u0026 Conflict Resolution - file locking, optimistic concurrency for manifest",
+      "id": "t-023",
+      "title": "Task create with --type flag populates model from config defaults",
       "status": "complete",
       "priority": 1,
-      "created_at": "2026-02-07T12:18:07.853111734Z",
-      "updated_at": "2026-02-07T12:49:09.830629832Z"
-    },
-    {
-      "id": "t-024",
-      "title": "Generate task.md files with frontmatter (not just manifest.json)",
-      "status": "complete",
-      "priority": 1,
-      "created_at": "2026-02-07T17:28:21.268202194Z",
-      "updated_at": "2026-02-07T17:33:48.11453003Z"
-    },
-    {
-      "id": "t-021",
-      "title": "Auto-failover to fallback model on quota exhaustion (429/rate limit)",
-      "status": "complete",
-      "priority": 1,
-      "created_at": "2026-02-07T17:28:15.300054869Z",
-      "updated_at": "2026-02-07T18:16:02.866371937Z"
-    },
-    {
-      "id": "t-018",
-      "title": "Implement Gemini CLI backend (gemini)",
-      "status": "in_progress",
-      "priority": 2,
-      "created_at": "2026-02-07T17:28:10.105709711Z",
-      "updated_at": "2026-02-07T18:16:07.467546088Z"
-    },
-    {
-      "id": "t-008",
-      "title": "Authentication \u0026 Authorization - RBAC, team permissions, SSO/OIDC integration",
-      "status": "complete",
-      "priority": 3,
-      "created_at": "2026-02-07T12:18:13.176634249Z",
-      "updated_at": "2026-02-07T17:07:54.02695798Z"
-    },
-    {
-      "id": "t-012",
-      "title": "Lead by Example - ensure all packages have comprehensive test coverage",
-      "status": "complete",
-      "priority": 1,
-      "created_at": "2026-02-07T12:18:17.789687452Z",
-      "updated_at": "2026-02-07T17:07:54.041110853Z"
-    },
-    {
-      "id": "t-002",
-      "title": "Remove committed binary, add Makefile with build/test/lint targets",
-      "status": "complete",
-      "priority": 1,
-      "created_at": "2026-02-07T12:18:01.514433329Z",
-      "updated_at": "2026-02-07T12:49:09.797025183Z"
-    },
-    {
-      "id": "t-026",
-      "title": "Update docs/MCP.md for multi-backend orchestration",
-      "status": "in_progress",
-      "priority": 3,
-      "created_at": "2026-02-07T17:28:21.276994975Z",
-      "updated_at": "2026-02-07T18:16:07.477759758Z"
-    },
-    {
-      "id": "t-027",
-      "title": "Loop mode CLI option - iterate through all outstanding tasks automatically",
-      "status": "pending",
-      "priority": 1,
-      "model": "claude/sonnet",
-      "type": "build",
-      "created_at": "2026-02-07T18:20:28.887647532Z",
-      "updated_at": "2026-02-07T18:20:28.887647681Z"
-    },
-    {
-      "id": "t-022",
-      "title": "Add 'flo quota status' command showing usage per backend",
-      "status": "in_progress",
-      "priority": 2,
-      "created_at": "2026-02-07T17:28:15.304795229Z",
-      "updated_at": "2026-02-07T18:16:07.471032027Z"
-    },
-    {
-      "id": "t-019",
-      "title": "Backend registry with dynamic provider lookup",
-      "status": "complete",
-      "priority": 1,
-      "created_at": "2026-02-07T17:28:10.110215887Z",
-      "updated_at": "2026-02-07T17:33:48.110854292Z"
+      "created_at": "2026-02-07T17:28:21.261967435Z",
+      "updated_at": "2026-02-07T18:16:02.870625389Z"
     },
     {
       "id": "t-013",
@@ -139,84 +193,30 @@
       "updated_at": "2026-02-07T12:49:09.886707482Z"
     },
     {
+      "id": "t-027",
+      "title": "Loop mode CLI option - iterate through all outstanding tasks automatically",
+      "status": "in_progress",
+      "priority": 1,
+      "model": "claude/sonnet",
+      "type": "build",
+      "created_at": "2026-02-07T18:20:28.887647532Z",
+      "updated_at": "2026-02-07T18:21:42.553882017Z"
+    },
+    {
+      "id": "t-026",
+      "title": "Update docs/MCP.md for multi-backend orchestration",
+      "status": "complete",
+      "priority": 3,
+      "created_at": "2026-02-07T17:28:21.276994975Z",
+      "updated_at": "2026-02-07T18:21:36.478296645Z"
+    },
+    {
       "id": "t-014",
       "title": "Update task.md frontmatter schema with model/provider/type fields",
       "status": "complete",
       "priority": 1,
       "created_at": "2026-02-07T17:28:05.046874426Z",
       "updated_at": "2026-02-07T17:33:48.101646669Z"
-    },
-    {
-      "id": "t-025",
-      "title": "Update README with BYO AI vision and multi-provider support",
-      "status": "in_progress",
-      "priority": 2,
-      "created_at": "2026-02-07T17:28:21.272708426Z",
-      "updated_at": "2026-02-07T18:16:07.474410929Z"
-    },
-    {
-      "id": "t-003",
-      "title": "Versioning \u0026 Release Process - tags, changelog, goreleaser",
-      "status": "complete",
-      "priority": 2,
-      "created_at": "2026-02-07T12:18:01.526798841Z",
-      "updated_at": "2026-02-07T12:49:09.811603087Z"
-    },
-    {
-      "id": "t-016",
-      "title": "CLI reads model from task.md frontmatter when running flo work",
-      "status": "complete",
-      "priority": 1,
-      "created_at": "2026-02-07T17:28:05.058003453Z",
-      "updated_at": "2026-02-07T18:16:02.853716636Z"
-    },
-    {
-      "id": "t-007",
-      "title": "Secret Management - .env handling, credential docs, secure token storage",
-      "status": "complete",
-      "priority": 2,
-      "created_at": "2026-02-07T12:18:07.873591416Z",
-      "updated_at": "2026-02-07T12:54:53.590567861Z"
-    },
-    {
-      "id": "t-023",
-      "title": "Task create with --type flag populates model from config defaults",
-      "status": "complete",
-      "priority": 1,
-      "created_at": "2026-02-07T17:28:21.261967435Z",
-      "updated_at": "2026-02-07T18:16:02.870625389Z"
-    },
-    {
-      "id": "t-020",
-      "title": "Quota tracking per backend (requests, tokens, rate limits)",
-      "status": "complete",
-      "priority": 1,
-      "created_at": "2026-02-07T17:28:15.293665351Z",
-      "updated_at": "2026-02-07T18:16:02.8610059Z"
-    },
-    {
-      "id": "t-017",
-      "title": "Implement Codex CLI backend (codex)",
-      "status": "in_progress",
-      "priority": 2,
-      "created_at": "2026-02-07T17:28:10.099388507Z",
-      "updated_at": "2026-02-07T18:16:07.458428355Z"
-    },
-    {
-      "id": "t-009",
-      "title": "Observability \u0026 Audit Trail - structured logs, event history, agent action tracking",
-      "status": "complete",
-      "priority": 2,
-      "created_at": "2026-02-07T12:18:13.182788543Z",
-      "updated_at": "2026-02-07T12:49:09.845257199Z"
-    },
-    {
-      "id": "t-015",
-      "title": "Add task types to config: design, build, refactor, test, fix, docs, review",
-      "status": "complete",
-      "priority": 1,
-      "created_at": "2026-02-07T17:28:05.053481387Z",
-      "updated_at": "2026-02-07T17:33:48.107609846Z"
     }
   ]
 }

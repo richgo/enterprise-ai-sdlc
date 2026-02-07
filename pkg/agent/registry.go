@@ -39,6 +39,13 @@ func init() {
 		return NewCodexBackend(CodexConfig{})
 	})
 
+	RegisterBackend("gemini", func(config any) Backend {
+		if cfg, ok := config.(*GeminiConfig); ok {
+			return NewGeminiBackend(*cfg)
+		}
+		return NewGeminiBackend(GeminiConfig{})
+	})
+
 	RegisterBackend("mock", func(config any) Backend {
 		return NewMockBackend()
 	})

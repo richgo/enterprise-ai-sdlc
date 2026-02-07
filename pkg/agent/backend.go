@@ -60,6 +60,11 @@ func NewBackendByName(name string, config any) Backend {
 			return NewCodexBackend(*cfg)
 		}
 		return NewCodexBackend(CodexConfig{})
+	case "gemini":
+		if cfg, ok := config.(*GeminiConfig); ok {
+			return NewGeminiBackend(*cfg)
+		}
+		return NewGeminiBackend(GeminiConfig{})
 	case "mock":
 		return NewMockBackend()
 	default:

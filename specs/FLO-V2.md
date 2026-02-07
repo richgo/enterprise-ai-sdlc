@@ -36,15 +36,42 @@ type: refactor
 
 ## Task Types & Default Models
 
+Organized by development phase:
+
+### Discovery
 | Type | Description | Default Model | Reasoning |
 |------|-------------|---------------|-----------|
-| design | Architecture, specs | claude/opus | Deep thinking |
-| build | New features | claude/sonnet | Balance |
-| refactor | Code cleanup | copilot/gpt-4 | Fast iterations |
-| test | Write tests | claude/sonnet | Accuracy |
+| research | Problem exploration, competitive analysis | claude/opus | Deep thinking, web search |
+| explore | Codebase exploration, understanding | claude/sonnet | Good at reading code |
+
+### Design
+| Type | Description | Default Model | Reasoning |
+|------|-------------|---------------|-----------|
+| architecture | System design, specs, ADRs | claude/opus | Complex reasoning |
+| api-design | API contracts, OpenAPI schemas | claude/sonnet | Structured output |
+| visual-design | UI/UX, components, layouts | gemini/pro | Visual reasoning |
+| data-model | Database schemas, ERDs | claude/sonnet | Relational thinking |
+
+### Build
+| Type | Description | Default Model | Reasoning |
+|------|-------------|---------------|-----------|
+| build | New features | claude/sonnet | Balance speed/quality |
+| refactor | Code cleanup, restructuring | copilot/gpt-4 | Fast iterations |
+| migrate | Tech migrations, upgrades | claude/sonnet | Careful analysis |
+
+### Quality
+| Type | Description | Default Model | Reasoning |
+|------|-------------|---------------|-----------|
+| test | Write tests | claude/sonnet | Accuracy matters |
 | fix | Bug fixes | copilot/gpt-4 | Quick turnaround |
-| docs | Documentation | claude/haiku | Simple output |
-| review | Code review | claude/sonnet | Nuanced feedback |
+| security | Security review, vulnerability fixes | claude/opus | Thorough analysis |
+| performance | Optimization, profiling | claude/sonnet | Technical depth |
+
+### Document
+| Type | Description | Default Model | Reasoning |
+|------|-------------|---------------|-----------|
+| docs | Documentation, READMEs | claude/haiku | Simple output |
+| review | Code review, PR feedback | claude/sonnet | Nuanced feedback |
 
 ## Config Schema
 

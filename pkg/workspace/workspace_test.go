@@ -264,12 +264,12 @@ func TestWorkspaceCreateTaskWithType(t *testing.T) {
 	}
 
 	// Create task with design type
-	task, err := ws.CreateTaskWithType("Design architecture", "design", "", nil, 0)
+	task, err := ws.CreateTaskWithType("System architecture", "architecture", "", nil, 0)
 	if err != nil {
 		t.Fatalf("CreateTaskWithType failed: %v", err)
 	}
 
-	if task.Type != "design" {
+	if task.Type != "architecture" {
 		t.Errorf("expected type 'design', got %q", task.Type)
 	}
 	

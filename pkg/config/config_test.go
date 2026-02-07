@@ -238,7 +238,7 @@ func TestConfigTaskTypes(t *testing.T) {
 	}
 
 	// Check for expected task types
-	expectedTypes := []string{"design", "build", "refactor", "test", "fix", "docs", "review"}
+	expectedTypes := []string{"architecture", "build", "refactor", "test", "fix", "docs", "review"}
 	for _, typeName := range expectedTypes {
 		taskType, exists := cfg.TaskTypes[typeName]
 		if !exists {
@@ -251,11 +251,11 @@ func TestConfigTaskTypes(t *testing.T) {
 	}
 
 	// Verify specific models
-	if cfg.TaskTypes["design"].Model != "claude/opus" {
-		t.Errorf("design type should use claude/opus, got %q", cfg.TaskTypes["design"].Model)
+	if cfg.TaskTypes["architecture"].Model != "claude/opus" {
+		t.Errorf("architecture type should use claude/opus, got %q", cfg.TaskTypes["architecture"].Model)
 	}
-	if cfg.TaskTypes["design"].Thinking != "extended" {
-		t.Errorf("design type should have extended thinking, got %q", cfg.TaskTypes["design"].Thinking)
+	if cfg.TaskTypes["architecture"].Thinking != "extended" {
+		t.Errorf("architecture type should have extended thinking, got %q", cfg.TaskTypes["architecture"].Thinking)
 	}
 	if cfg.TaskTypes["build"].Model != "claude/sonnet" {
 		t.Errorf("build type should use claude/sonnet, got %q", cfg.TaskTypes["build"].Model)

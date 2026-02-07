@@ -77,24 +77,64 @@ func New(feature string) *Config {
 }
 
 // defaultTaskTypes returns the default task type configurations.
+// Organized by phase: Discovery → Design → Build → Quality → Document
 func defaultTaskTypes() map[string]TaskType {
 	return map[string]TaskType{
-		"design": {
+		// Discovery - understand the problem space
+		"research": {
 			Model:    "claude/opus",
 			Thinking: "extended",
 		},
+		"explore": {
+			Model:    "claude/sonnet",
+			Thinking: "normal",
+		},
+		
+		// Design - plan the solution
+		"architecture": {
+			Model:    "claude/opus",
+			Thinking: "extended",
+		},
+		"api-design": {
+			Model:    "claude/sonnet",
+			Thinking: "normal",
+		},
+		"visual-design": {
+			Model:    "gemini/pro",
+			Thinking: "normal",
+		},
+		"data-model": {
+			Model: "claude/sonnet",
+		},
+		
+		// Build - implement the solution
 		"build": {
 			Model: "claude/sonnet",
 		},
 		"refactor": {
 			Model: "copilot/gpt-4",
 		},
+		"migrate": {
+			Model:    "claude/sonnet",
+			Thinking: "normal",
+		},
+		
+		// Quality - verify and improve
 		"test": {
 			Model: "claude/sonnet",
 		},
 		"fix": {
 			Model: "copilot/gpt-4",
 		},
+		"security": {
+			Model:    "claude/opus",
+			Thinking: "extended",
+		},
+		"performance": {
+			Model: "claude/sonnet",
+		},
+		
+		// Document - explain and review
 		"docs": {
 			Model: "claude/haiku",
 		},

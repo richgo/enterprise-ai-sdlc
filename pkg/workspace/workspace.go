@@ -405,6 +405,25 @@ status: %s`, t.ID, t.Status)
 		body += fmt.Sprintf("\n%s\n", t.Description)
 	}
 
+	// Add TDD enforcement section
+	body += `
+## TDD Requirements
+
+**This task MUST follow Test-Driven Development:**
+
+1. **Write tests first** - Before implementing any feature, write failing tests
+2. **Red → Green → Refactor** - Follow the TDD cycle strictly
+3. **Run tests continuously** - Use ` + "`flo test`" + ` or ` + "`make test`" + ` after each change
+4. **No implementation without tests** - Every new function/method needs test coverage
+5. **Tests must pass before completion** - Task cannot be marked complete with failing tests
+
+### Completion Checklist
+- [ ] Tests written for new functionality
+- [ ] All tests passing
+- [ ] Coverage maintained or improved
+- [ ] No regressions introduced
+`
+
 	content := frontmatter + body
 
 	if err := os.WriteFile(taskPath, []byte(content), 0644); err != nil {

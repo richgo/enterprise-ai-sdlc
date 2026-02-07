@@ -238,3 +238,5 @@
 {"timestamp":"2026-02-07T17:33:48.115503594Z","level":"INFO","operation":"workspace.save","message":"Workspace saved","details":{"task_count":26}}
 {"timestamp":"2026-02-07T17:33:48.115513112Z","level":"INFO","operation":"workspace.task_status","message":"Task status changed","details":{"new_status":"complete","old_status":"in_progress","task_id":"t-024"}}
 {"timestamp":"2026-02-07T17:33:48.118068455Z","level":"INFO","operation":"workspace.load","message":"Workspace loaded","details":{"backend":"copilot","feature":"flo-v1","task_count":26}}
+{"timestamp":"2026-02-07T18:05:10.362223258Z","level":"INFO","operation":"workspace.load","message":"Workspace loaded","details":{"backend":"copilot","feature":"flo-v1","task_count":26}}
+{"timestamp":"2026-02-07T18:05:10.362334739Z","level":"WARN","operation":"task.set_status","message":"Invalid status transition","details":{"from":"complete","task_id":"t-015","task_title":"Add task types to config: design, build, refactor, test, fix, docs, review","to":"in_progress"}}

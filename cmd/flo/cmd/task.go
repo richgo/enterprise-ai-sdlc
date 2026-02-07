@@ -64,6 +64,7 @@ var taskListCmd = &cobra.Command{
 var createRepo string
 var createDeps string
 var createPriority int
+var createType string
 
 var taskCreateCmd = &cobra.Command{
 	Use:   "create <title>",
@@ -84,13 +85,19 @@ var taskCreateCmd = &cobra.Command{
 			}
 		}
 
-		task, err := ws.CreateTask(title, createRepo, deps, createPriority)
+		task, err := ws.CreateTaskWithType(title, createType, createRepo, deps, createPriority)
 		if err != nil {
 			return err
 		}
 
 		fmt.Printf("✓ Created task: %s\n", task.ID)
 		fmt.Printf("  Title: %s\n", task.Title)
+		if task.Type != "" {
+			fmt.Printf("  Type:  %s\n", task.Type)
+		}
+		if task.Model != "" {
+			fmt.Printf("  Model: %s\n", task.Model)
+		}
 		if task.Repo != "" {
 			fmt.Printf("  Repo:  %s\n", task.Repo)
 		}
@@ -191,6 +198,7 @@ func init() {
 	taskCreateCmd.Flags().StringVar(&createRepo, "repo", "", "Target repository")
 	taskCreateCmd.Flags().StringVar(&createDeps, "deps", "", "Comma-separated dependency task IDs")
 	taskCreateCmd.Flags().IntVar(&createPriority, "priority", 0, "Task priority (0 = highest)")
+	taskCreateCmd.Flags().StringVar(&createType, "type", "", "Task type (e.g., build, refactor, test, fix)")
 
 	taskCmd.AddCommand(taskListCmd)
 	taskCmd.AddCommand(taskCreateCmd)

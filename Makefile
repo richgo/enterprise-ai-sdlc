@@ -21,6 +21,14 @@ test:
 	@echo "Running tests..."
 	@go test ./... -v
 
+# Run tests with coverage
+coverage:
+	@echo "Running tests with coverage..."
+	@go test -coverprofile=coverage.out ./...
+	@go tool cover -func=coverage.out | tail -1
+	@go tool cover -html=coverage.out -o coverage.html
+	@echo "Coverage report: coverage.html"
+
 # Run linter
 lint:
 	@echo "Running golangci-lint..."
@@ -50,6 +58,7 @@ help:
 	@echo "  all      - Run lint, test, and build (default)"
 	@echo "  build    - Build the flo binary to bin/flo"
 	@echo "  test     - Run all tests"
+	@echo "  coverage - Run tests with coverage report"
 	@echo "  lint     - Run golangci-lint"
 	@echo "  clean    - Remove build artifacts"
 	@echo "  install  - Install flo to GOPATH/bin"

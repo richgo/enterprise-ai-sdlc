@@ -7,10 +7,13 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/richgo/flo/pkg/agent"
+	"github.com/richgo/flo/pkg/quota"
 	"github.com/richgo/flo/pkg/task"
+	"github.com/richgo/flo/pkg/workspace"
 )
 
 var workBackend string
@@ -97,47 +100,110 @@ Uses the configured backend (claude or copilot) unless overridden.`,
 		ws.Tasks.Update(t)
 		ws.Save()
 
-		// Create backend
+		// Initialize quota tracker
+		quotaPath := filepath.Join(ws.Root, ".flo", "quota.json")
+		quotaTracker := initQuotaTracker(quotaPath, ws)
+
+		// Attempt to run with primary backend, fallback if needed
 		ctx := context.Background()
+		result, err := runWithFailover(ctx, ws, t, backendName, model, quotaTracker)
 		
-		var backend agent.Backend
-		switch backendName {
-		case "claude":
-			mcpConfig := filepath.Join(ws.Root, ".eas", "mcp.json")
-			// Generate MCP config
-			if err := generateMCPConfig(mcpConfig, ws.Root); err != nil {
-				return fmt.Errorf("failed to generate MCP config: %w", err)
-			}
-			claudeModel := ws.Config.Claude.Model
-			if model != "" {
-				claudeModel = model
-			}
-			backend = agent.NewClaudeBackend(agent.ClaudeConfig{
-				MCPConfig: mcpConfig,
-				Model:     claudeModel,
-			})
-		case "copilot":
-			copilotModel := ws.Config.Copilot.Model
-			if model != "" {
-				copilotModel = model
-			}
-			backend = agent.NewCopilotBackend(agent.CopilotConfig{
-				Model: copilotModel,
-			})
-		default:
-			return fmt.Errorf("unknown backend: %s", backendName)
+		if err != nil {
+			return fmt.Errorf("agent failed: %w", err)
 		}
 
-		if err := backend.Start(ctx); err != nil {
-			return fmt.Errorf("failed to start backend: %w", err)
+		if result.Success {
+			fmt.Printf("\n✅ Task %s completed successfully\n", taskID)
+		} else {
+			fmt.Printf("\n❌ Task %s failed: %s\n", taskID, result.Error)
+			// Revert status
+			t.SetStatus(task.StatusFailed)
+			ws.Tasks.Update(t)
+			ws.Save()
 		}
-		defer backend.Stop()
 
-		// Read spec for context
-		spec, _ := ws.ReadSpec()
+		return nil
+	},
+}
 
-		// Build prompt
-		prompt := fmt.Sprintf(`You are working on task %s in a TDD workflow.
+// runWithFailover attempts to run a task with the primary backend, and falls back to the fallback model if quota is exhausted.
+func runWithFailover(ctx context.Context, ws *workspace.Workspace, t *task.Task, backendName, model string, tracker *quota.Tracker) (*agent.Result, error) {
+	// Try primary backend
+	result, err := runBackend(ctx, ws, t, backendName, model, tracker)
+	
+	// Check if we hit quota exhaustion
+	if err != nil && isQuotaError(err) && t.Fallback != "" {
+		fmt.Printf("\n⚠️  Quota exhausted for %s, failing over to %s\n", backendName, t.Fallback)
+		
+		// Parse fallback model
+		parts := strings.Split(t.Fallback, "/")
+		if len(parts) == 2 {
+			fallbackBackend := parts[0]
+			fallbackModel := parts[1]
+			
+			// Record the failover
+			tracker.RecordError(backendName, time.Hour)
+			
+			fmt.Printf("🔄 Retrying with fallback backend: %s/%s\n", fallbackBackend, fallbackModel)
+			
+			// Try fallback
+			result, err = runBackend(ctx, ws, t, fallbackBackend, fallbackModel, tracker)
+		}
+	}
+	
+	return result, err
+}
+
+// runBackend executes a task with a specific backend.
+func runBackend(ctx context.Context, ws *workspace.Workspace, t *task.Task, backendName, model string, tracker *quota.Tracker) (*agent.Result, error) {
+	// Check if backend is exhausted before starting
+	if tracker.IsExhausted(backendName) {
+		return nil, fmt.Errorf("quota exhausted for backend %s", backendName)
+	}
+
+	// Create backend
+	var backend agent.Backend
+	switch backendName {
+	case "claude":
+		mcpConfig := filepath.Join(ws.Root, ".eas", "mcp.json")
+		// Generate MCP config
+		if err := generateMCPConfig(mcpConfig, ws.Root); err != nil {
+			return nil, fmt.Errorf("failed to generate MCP config: %w", err)
+		}
+		claudeModel := ws.Config.Claude.Model
+		if model != "" {
+			claudeModel = model
+		}
+		backend = agent.NewClaudeBackend(agent.ClaudeConfig{
+			MCPConfig: mcpConfig,
+			Model:     claudeModel,
+		})
+	case "copilot":
+		copilotModel := ws.Config.Copilot.Model
+		if model != "" {
+			copilotModel = model
+		}
+		backend = agent.NewCopilotBackend(agent.CopilotConfig{
+			Model: copilotModel,
+		})
+	default:
+		return nil, fmt.Errorf("unknown backend: %s", backendName)
+	}
+
+	if err := backend.Start(ctx); err != nil {
+		// Check if this is a quota error
+		if isQuotaError(err) {
+			tracker.RecordError(backendName, time.Hour)
+		}
+		return nil, fmt.Errorf("failed to start backend: %w", err)
+	}
+	defer backend.Stop()
+
+	// Read spec for context
+	spec, _ := ws.ReadSpec()
+
+	// Build prompt
+	prompt := fmt.Sprintf(`You are working on task %s in a TDD workflow.
 
 ## Task
 Title: %s
@@ -159,47 +225,72 @@ Available tools:
 
 Begin implementing the task.`, t.ID, t.Title, t.Description, spec)
 
-		// Create session
-		session, err := backend.CreateSession(ctx, t, ws.Root)
-		if err != nil {
-			return fmt.Errorf("failed to create session: %w", err)
+	// Create session
+	session, err := backend.CreateSession(ctx, t, ws.Root)
+	if err != nil {
+		if isQuotaError(err) {
+			tracker.RecordError(backendName, time.Hour)
 		}
-		defer session.Destroy(ctx)
+		return nil, fmt.Errorf("failed to create session: %w", err)
+	}
+	defer session.Destroy(ctx)
 
-		// Stream events
-		go func() {
-			for event := range session.Events() {
-				switch event.Type {
-				case "message":
-					fmt.Print(event.Content)
-				case "tool_call":
-					fmt.Printf("\n🔧 %s\n", event.Content)
-				case "complete":
-					fmt.Println("\n✅ Complete")
-				case "error":
-					fmt.Printf("\n❌ Error: %s\n", event.Content)
-				}
+	// Stream events
+	go func() {
+		for event := range session.Events() {
+			switch event.Type {
+			case "message":
+				fmt.Print(event.Content)
+			case "tool_call":
+				fmt.Printf("\n🔧 %s\n", event.Content)
+			case "complete":
+				fmt.Println("\n✅ Complete")
+			case "error":
+				fmt.Printf("\n❌ Error: %s\n", event.Content)
 			}
-		}()
-
-		// Run the agent
-		result, err := session.Run(ctx, prompt)
-		if err != nil {
-			return fmt.Errorf("agent failed: %w", err)
 		}
+	}()
 
-		if result.Success {
-			fmt.Printf("\n✅ Task %s completed successfully\n", taskID)
-		} else {
-			fmt.Printf("\n❌ Task %s failed: %s\n", taskID, result.Error)
-			// Revert status
-			t.SetStatus(task.StatusFailed)
-			ws.Tasks.Update(t)
-			ws.Save()
+	// Run the agent
+	result, err := session.Run(ctx, prompt)
+	if err != nil {
+		if isQuotaError(err) {
+			tracker.RecordError(backendName, time.Hour)
 		}
+		return nil, err
+	}
+	
+	// Record successful usage (approximate token count)
+	if result.Success {
+		tracker.Record(backendName, 10000) // Estimate, actual would come from API
+	}
+	
+	return result, nil
+}
 
-		return nil
-	},
+// isQuotaError checks if an error is related to quota exhaustion.
+func isQuotaError(err error) bool {
+	if err == nil {
+		return false
+	}
+	errStr := strings.ToLower(err.Error())
+	return strings.Contains(errStr, "429") ||
+		strings.Contains(errStr, "rate limit") ||
+		strings.Contains(errStr, "quota") ||
+		strings.Contains(errStr, "too many requests")
+}
+
+// initQuotaTracker initializes the quota tracker with limits from config.
+func initQuotaTracker(path string, ws *workspace.Workspace) *quota.Tracker {
+	tracker := quota.New(path)
+	tracker.Load()
+	
+	// Set limits from config if available
+	// Default limits for common backends
+	tracker.SetLimit("claude", 50)  // 50 requests per hour for premium
+	tracker.SetLimit("copilot", 100) // Higher limit for copilot
+	
+	return tracker
 }
 
 func init() {

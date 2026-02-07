@@ -124,6 +124,63 @@ var taskGetCmd = &cobra.Command{
 	},
 }
 
+var taskStartCmd = &cobra.Command{
+	Use:   "start <task-id>",
+	Short: "Mark task as in progress",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		ws, err := loadWorkspace()
+		if err != nil {
+			return err
+		}
+
+		if err := ws.SetTaskStatus(args[0], "in_progress"); err != nil {
+			return err
+		}
+
+		fmt.Printf("✓ Task %s started\n", args[0])
+		return nil
+	},
+}
+
+var taskCompleteCmd = &cobra.Command{
+	Use:   "complete <task-id>",
+	Short: "Mark task as complete",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		ws, err := loadWorkspace()
+		if err != nil {
+			return err
+		}
+
+		if err := ws.SetTaskStatus(args[0], "complete"); err != nil {
+			return err
+		}
+
+		fmt.Printf("✓ Task %s completed\n", args[0])
+		return nil
+	},
+}
+
+var taskFailCmd = &cobra.Command{
+	Use:   "fail <task-id>",
+	Short: "Mark task as failed",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		ws, err := loadWorkspace()
+		if err != nil {
+			return err
+		}
+
+		if err := ws.SetTaskStatus(args[0], "failed"); err != nil {
+			return err
+		}
+
+		fmt.Printf("✓ Task %s marked as failed\n", args[0])
+		return nil
+	},
+}
+
 func init() {
 	// List command
 	taskListCmd.Flags().StringVar(&listStatus, "status", "", "Filter by status (pending, in_progress, complete, failed)")
@@ -138,6 +195,9 @@ func init() {
 	taskCmd.AddCommand(taskListCmd)
 	taskCmd.AddCommand(taskCreateCmd)
 	taskCmd.AddCommand(taskGetCmd)
+	taskCmd.AddCommand(taskStartCmd)
+	taskCmd.AddCommand(taskCompleteCmd)
+	taskCmd.AddCommand(taskFailCmd)
 }
 
 func loadWorkspace() (*workspace.Workspace, error) {

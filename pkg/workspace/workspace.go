@@ -270,6 +270,35 @@ func (w *Workspace) GetReadyTasks() []*task.Task {
 	return w.Tasks.GetReady()
 }
 
+// SetTaskStatus updates the status of a task and saves.
+func (w *Workspace) SetTaskStatus(id string, status string) error {
+	t, err := w.Tasks.Get(id)
+	if err != nil {
+		return err
+	}
+	
+	oldStatus := t.Status
+	if err := t.SetStatus(task.Status(status)); err != nil {
+		return err
+	}
+	
+	if err := w.Tasks.Update(t); err != nil {
+		return err
+	}
+	
+	if err := w.Save(); err != nil {
+		return err
+	}
+	
+	audit.Info("workspace.task_status", "Task status changed", map[string]interface{}{
+		"task_id":    id,
+		"old_status": oldStatus,
+		"new_status": status,
+	})
+	
+	return nil
+}
+
 // Status returns the current workspace status.
 func (w *Workspace) Status() *Status {
 	tasks := w.Tasks.List()

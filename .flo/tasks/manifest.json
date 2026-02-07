@@ -1,5 +1,22 @@
 {
+  "version": 16,
   "tasks": [
+    {
+      "id": "t-009",
+      "title": "Observability \u0026 Audit Trail - structured logs, event history, agent action tracking",
+      "status": "complete",
+      "priority": 2,
+      "created_at": "2026-02-07T12:18:13.182788543Z",
+      "updated_at": "2026-02-07T12:49:09.845257199Z"
+    },
+    {
+      "id": "t-004",
+      "title": "Concurrency \u0026 Conflict Resolution - file locking, optimistic concurrency for manifest",
+      "status": "complete",
+      "priority": 1,
+      "created_at": "2026-02-07T12:18:07.853111734Z",
+      "updated_at": "2026-02-07T12:49:09.830629832Z"
+    },
     {
       "id": "t-012",
       "title": "Lead by Example - ensure all packages have comprehensive test coverage",
@@ -9,12 +26,12 @@
       "updated_at": "2026-02-07T12:18:17.789687581Z"
     },
     {
-      "id": "t-009",
-      "title": "Observability \u0026 Audit Trail - structured logs, event history, agent action tracking",
+      "id": "t-010",
+      "title": "MCP Server Documentation - protocol contract, agent discovery, concurrent sessions",
       "status": "pending",
       "priority": 2,
-      "created_at": "2026-02-07T12:18:13.182788543Z",
-      "updated_at": "2026-02-07T12:18:13.182788635Z"
+      "created_at": "2026-02-07T12:18:13.188332636Z",
+      "updated_at": "2026-02-07T12:18:13.188332729Z"
     },
     {
       "id": "t-005",
@@ -25,44 +42,20 @@
       "updated_at": "2026-02-07T12:18:07.861431736Z"
     },
     {
-      "id": "t-006",
-      "title": "Error Handling \u0026 Retry - circuit breaker, retry logic, fallback for agent backends",
-      "status": "pending",
-      "priority": 2,
-      "created_at": "2026-02-07T12:18:07.867108884Z",
-      "updated_at": "2026-02-07T12:18:07.867108958Z"
-    },
-    {
-      "id": "t-004",
-      "title": "Concurrency \u0026 Conflict Resolution - file locking, optimistic concurrency for manifest",
-      "status": "pending",
+      "id": "t-002",
+      "title": "Remove committed binary, add Makefile with build/test/lint targets",
+      "status": "complete",
       "priority": 1,
-      "created_at": "2026-02-07T12:18:07.853111734Z",
-      "updated_at": "2026-02-07T12:18:07.853111827Z"
+      "created_at": "2026-02-07T12:18:01.514433329Z",
+      "updated_at": "2026-02-07T12:49:09.797025183Z"
     },
     {
       "id": "t-011",
       "title": "Contribution Guidelines - CONTRIBUTING.md, CODE_OF_CONDUCT, issue templates",
-      "status": "pending",
+      "status": "complete",
       "priority": 2,
       "created_at": "2026-02-07T12:18:17.781046212Z",
-      "updated_at": "2026-02-07T12:18:17.781046341Z"
-    },
-    {
-      "id": "t-003",
-      "title": "Versioning \u0026 Release Process - tags, changelog, goreleaser",
-      "status": "pending",
-      "priority": 2,
-      "created_at": "2026-02-07T12:18:01.526798841Z",
-      "updated_at": "2026-02-07T12:18:01.526798971Z"
-    },
-    {
-      "id": "t-001",
-      "title": "CI/CD Pipeline - GitHub Actions for test, lint, release",
-      "status": "pending",
-      "priority": 1,
-      "created_at": "2026-02-07T12:18:01.503674399Z",
-      "updated_at": "2026-02-07T12:18:01.503674565Z"
+      "updated_at": "2026-02-07T12:49:09.861952941Z"
     },
     {
       "id": "t-007",
@@ -73,6 +66,21 @@
       "updated_at": "2026-02-07T12:18:07.873591508Z"
     },
     {
+      "id": "t-001",
+      "title": "CI/CD Pipeline - GitHub Actions for test, lint, release",
+      "status": "complete",
+      "priority": 1,
+      "created_at": "2026-02-07T12:18:01.503674399Z",
+      "updated_at": "2026-02-07T12:49:09.776308208Z"
+    },
+    {
+      "id": "t-013",
+      "title": "Add task state commands: start, complete, fail",
+      "status": "complete",
+      "created_at": "2026-02-07T12:48:14.751518868Z",
+      "updated_at": "2026-02-07T12:49:09.886707482Z"
+    },
+    {
       "id": "t-008",
       "title": "Authentication \u0026 Authorization - RBAC, team permissions, SSO/OIDC integration",
       "status": "pending",
@@ -81,20 +89,20 @@
       "updated_at": "2026-02-07T12:18:13.176634323Z"
     },
     {
-      "id": "t-002",
-      "title": "Remove committed binary, add Makefile with build/test/lint targets",
-      "status": "pending",
-      "priority": 1,
-      "created_at": "2026-02-07T12:18:01.514433329Z",
-      "updated_at": "2026-02-07T12:18:01.514433458Z"
-    },
-    {
-      "id": "t-010",
-      "title": "MCP Server Documentation - protocol contract, agent discovery, concurrent sessions",
+      "id": "t-006",
+      "title": "Error Handling \u0026 Retry - circuit breaker, retry logic, fallback for agent backends",
       "status": "pending",
       "priority": 2,
-      "created_at": "2026-02-07T12:18:13.188332636Z",
-      "updated_at": "2026-02-07T12:18:13.188332729Z"
+      "created_at": "2026-02-07T12:18:07.867108884Z",
+      "updated_at": "2026-02-07T12:18:07.867108958Z"
+    },
+    {
+      "id": "t-003",
+      "title": "Versioning \u0026 Release Process - tags, changelog, goreleaser",
+      "status": "complete",
+      "priority": 2,
+      "created_at": "2026-02-07T12:18:01.526798841Z",
+      "updated_at": "2026-02-07T12:49:09.811603087Z"
     }
   ]
 }

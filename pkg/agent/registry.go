@@ -32,6 +32,13 @@ func init() {
 		return NewCopilotBackend(CopilotConfig{})
 	})
 
+	RegisterBackend("codex", func(config any) Backend {
+		if cfg, ok := config.(*CodexConfig); ok {
+			return NewCodexBackend(*cfg)
+		}
+		return NewCodexBackend(CodexConfig{})
+	})
+
 	RegisterBackend("mock", func(config any) Backend {
 		return NewMockBackend()
 	})

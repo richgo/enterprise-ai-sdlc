@@ -55,6 +55,11 @@ func NewBackendByName(name string, config any) Backend {
 			return NewCopilotBackend(*cfg)
 		}
 		return NewCopilotBackend(CopilotConfig{})
+	case "codex":
+		if cfg, ok := config.(*CodexConfig); ok {
+			return NewCodexBackend(*cfg)
+		}
+		return NewCodexBackend(CodexConfig{})
 	case "mock":
 		return NewMockBackend()
 	default:

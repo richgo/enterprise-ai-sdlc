@@ -1,6 +1,6 @@
-# Enterprise AI SDLC (EAS)
+# Flo AI SDLC
 
-AI-powered spec-driven, test-driven development for enterprise teams.
+AI-powered spec-driven, test-driven development for individuals, teams & parallel agents.
 
 [![CI](https://github.com/richgo/flo/actions/workflows/ci.yml/badge.svg)](https://github.com/richgo/flo/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-140%20passing-brightgreen)]()

@@ -1,4 +1,4 @@
-# Enterprise AI SDLC - Architecture Proposal
+# Flo AI SDLC - Architecture Proposal
 
 ## Overview
 

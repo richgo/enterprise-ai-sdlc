@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/richgo/flo/pkg/agent"
@@ -59,15 +60,35 @@ Uses the configured backend (claude or copilot) unless overridden.`,
 			return fmt.Errorf("task %s has incomplete dependencies", taskID)
 		}
 
-		// Determine backend
+		// Try to read task.md file to get model from frontmatter
+		taskMDPath := filepath.Join(ws.Root, ".flo", "tasks", fmt.Sprintf("TASK-%s.md", taskID))
+		if taskFromFile, err := task.ParseTaskFile(taskMDPath); err == nil && taskFromFile.Model != "" {
+			// Update task with model from frontmatter
+			t.Model = taskFromFile.Model
+			t.Fallback = taskFromFile.Fallback
+		}
+
+		// Determine backend and model
 		backendName := ws.Backend
+		model := ""
+		
 		if workBackend != "" {
 			backendName = workBackend
+		} else if t.Model != "" {
+			// Parse model format: "backend/model" (e.g., "claude/sonnet", "copilot/gpt-4")
+			parts := strings.Split(t.Model, "/")
+			if len(parts) == 2 {
+				backendName = parts[0]
+				model = parts[1]
+			}
 		}
 
 		fmt.Printf("🚀 Starting work on task: %s\n", taskID)
 		fmt.Printf("   Title: %s\n", t.Title)
 		fmt.Printf("   Backend: %s\n", backendName)
+		if model != "" {
+			fmt.Printf("   Model: %s\n", model)
+		}
 
 		// Claim the task
 		if err := t.SetStatus(task.StatusInProgress); err != nil {
@@ -87,13 +108,21 @@ Uses the configured backend (claude or copilot) unless overridden.`,
 			if err := generateMCPConfig(mcpConfig, ws.Root); err != nil {
 				return fmt.Errorf("failed to generate MCP config: %w", err)
 			}
+			claudeModel := ws.Config.Claude.Model
+			if model != "" {
+				claudeModel = model
+			}
 			backend = agent.NewClaudeBackend(agent.ClaudeConfig{
 				MCPConfig: mcpConfig,
-				Model:     ws.Config.Claude.Model,
+				Model:     claudeModel,
 			})
 		case "copilot":
+			copilotModel := ws.Config.Copilot.Model
+			if model != "" {
+				copilotModel = model
+			}
 			backend = agent.NewCopilotBackend(agent.CopilotConfig{
-				Model: ws.Config.Copilot.Model,
+				Model: copilotModel,
 			})
 		default:
 			return fmt.Errorf("unknown backend: %s", backendName)
